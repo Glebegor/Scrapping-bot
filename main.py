@@ -19,10 +19,13 @@ class App:
         
         # Main cyclus
         for i in range(self.tbBot.start_row, count_of_repeat):
+            print("App working")
             id_of_company = self.tbBot.getId(i)
+
             listInfo = self.scBot.getInfo(str(id_of_company.value))
             self.tbBot.addToTable(listInfo=listInfo, rowId=i)
             time.sleep(5)
+        return
 
     def Test(self):
         id_of_company = input("Get id from user: ")
@@ -52,4 +55,4 @@ if __name__=="__main__":
     tbBot = TableBot({"Address":'F', "Site":'G', "Name":'H', "Number1":"I", "Number2":"J", "Number3":"K"}, 0, "mainTable", "БГ Черк. Унік.")
     app = App(scBot,tbBot)
 
-    app.Run()
+    err = app.Run()
