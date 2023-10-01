@@ -4,28 +4,14 @@ from packages.numbers import ScrapNumbers
 from packages.names import ScrapNames
 from packages.sites import ScrapSites
 from packages.address import ScrapAddress
+from app import Client
+
 import time
 
 class App:
     def __init__(self, scBot, tbBot):
         self.scBot = scBot
         self.tbBot = tbBot
-
-    def Run(self):
-        count_of_repeat = self.tbBot.getMaxSizeTable(3)
-        
-        # Settign start row
-        self.tbBot.setStartRow(self.tbBot.getMaxSizeTable(8)+1)
-        
-        # Main cyclus
-        for i in range(self.tbBot.start_row, count_of_repeat):
-            print("App working")
-            id_of_company = self.tbBot.getId(i)
-
-            listInfo = self.scBot.getInfo(str(id_of_company.value))
-            self.tbBot.addToTable(listInfo=listInfo, rowId=i)
-            time.sleep(5)
-        return
 
     def Test(self):
         id_of_company = input("Get id from user: ")
@@ -52,7 +38,8 @@ if __name__=="__main__":
 
     # Init app 
     scBot = ScrapperBot(scrapNumb, scrapNames, scrapSites, scrapAddress)
-    tbBot = TableBot({"Address":'F', "Site":'G', "Name":'H', "Number1":"I", "Number2":"J", "Number3":"K"}, 0, "mainTable", "БГ Черк. Унік.")
+    tbBot = TableBot({"Address":'F', "Site":'G', "Name":'H', "Number1":"I", "Number2":"J", "Number3":"K","Number4":"L"}, 0, "someInfo", "someInfo")
     app = App(scBot,tbBot)
 
-    err = app.Run()
+    client = Client([('Helvetica bold', 14),('Helvetica light', 10), ('Helvetica regular', 12), ('Helvetica bold', 18)], 400, 500, app)
+    client.Run()

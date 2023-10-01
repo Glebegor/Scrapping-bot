@@ -10,35 +10,28 @@ class ScrapNumbers:
         array_of_numbers = []
 
         # Adding numbers from database
-        array_of_numbers.append(self.getFromOpenData(id))
-        array_of_numbers.append(self.getFromNomis(id))
-        array_of_numbers.append(self.getFromUaRegion(id))
+        uareg = self.getFromUaRegion(id)
+        if uareg != None:
+            array_of_numbers.extend(self.getFromUaRegion(id))
+        nomin = self.getFromNomis(id)
+        if nomin != None:
+            array_of_numbers.extend(nomin)
+        opendata = self.getFromOpenData(id)
+        if opendata != None:
+            array_of_numbers.extend(opendata)
 
-        array_of_numbers = self.deleteNone(array_of_numbers)
-        # long mess test
-        for i in range(len(array_of_numbers)-1):
-            if len(array_of_numbers[i]) != 13:
-                array_of_numbers.pop(i)
-
-        filtered_array = self.getArrayNotRepeat(array_of_numbers)
-        if len(filtered_array) == 1 and filtered_array[0] == None:
+        filtered_array = self.notNone(array_of_numbers)
+        filtered_array = list(set(filtered_array))
+        if len(filtered_array) == 0:
             return ["Телефон не був знайдений"]
         return filtered_array
 
-    def getArrayNotRepeat(self, array):
-        for i in range(len(array)-1):
-            for j in range(len(array)-1):
-                if array[i] == array[j]:
-                    array.pop(j)
-        return array
-
-    def deleteNone(self, array):
-        for i in range(len(array)-1):
-            if array[i] == None:
-                array.pop(i)
-        if len(array) == 1:
-            return ["Телефон не був знайдений"]
-        return array
+    def notNone(self,array):
+        filtered_array = []
+        for val in array:
+            if val != None :
+                filtered_array.append(val)
+        return filtered_array
 
     def getFromOpenData(self, id):
         # Creating request
@@ -55,7 +48,7 @@ class ScrapNumbers:
             if not len(el.get_text()) == 0 :
                 if el.get_text()[0] == "+":
                     # Getting nubmer
-                    return el["href"][4:]
+                    return [str(el["href"][4:])]
         return None
 
     def getFromNomis(self, id):
@@ -72,17 +65,31 @@ class ScrapNumbers:
 
         # Finding of element    
         c = soup.find_all('div', {"class": "answ text col-xs-9 col-xxs-12 grey"})[1]
-        number = c.text.split(':')[1].split(';')[0]
-        for i in range(len(self.array_of_symbols)-1):
-            number = number.replace(self.array_of_symbols[i], "")
-        if number[0] == "+":
-            if number[1] == "3" and number[2] == "8" and number[3] == "0":
-                return number
-        else:
-            if number[0] == "3" and number[1] == "8" and number[2] == "0":
-                return "+" + number
-            else:
-                return "+38" + number
+        numbers = c.text.replace("\n",'').split(";")
+        filtered_numbers = []
+        for i in range(len(numbers)-1):
+            filtered_numbers.append(numbers[i].split(":")[1].replace(' ', '').replace('-', '').replace('(', '').replace(')', ''))
+        
+        if len(filtered_numbers)==0:
+            return None
+
+        for i in range(len(filtered_numbers)):
+            if '@' in filtered_numbers[i]:
+                filtered_numbers[i] = None
+            elif len(filtered_numbers[i])==13:
+                continue
+            elif len(filtered_numbers[i]) < 9 or len(filtered_numbers[i]) > 13:
+                filtered_numbers[i] = f"Неправильний номер телефону: {filtered_numbers[i]}"
+            elif len(filtered_numbers[i])==9:
+                filtered_numbers[i] = f"+380{filtered_numbers[i]}"
+            elif len(filtered_numbers[i])==10:
+                filtered_numbers[i] = f"+38{filtered_numbers[i]}"
+            elif len(filtered_numbers[i])==11:
+                filtered_numbers[i] = f"+3{filtered_numbers[i]}"
+            elif len(filtered_numbers[i])==12:
+                filtered_numbers[i] = f"+{filtered_numbers[i]}"
+
+        return filtered_numbers 
 
     def getFromUaRegion(self, id):
         # Creating request
@@ -93,10 +100,16 @@ class ScrapNumbers:
         soup = BeautifulSoup(r.content, 'html.parser')
         
         # Finding of element    
-        c = soup.find(self.has_tel_href)
-        if c == None:
+        c = soup.find_all(self.has_tel_href)
+
+        array_of_numbers = []
+        for i in range(len(c)):
+            array_of_numbers.append(c[i]['href'][4:])
+
+        if len(array_of_numbers)==0:
             return None
-        return c['href'][4:]
+
+        return array_of_numbers
 
     def has_tel_href(self, tag):
         return tag.name == 'a' and tag.get('href', '').startswith('tel:')

@@ -18,10 +18,6 @@ class TableBot:
         self.sheet = None
         self.worksheet = None
 
-        err = self.setTable(self.table_name, self.page)
-        if err != '':
-            print(err)
-
     # Main func to add info to table 
     def addToTable(self, listInfo, rowId):
         for value in listInfo:
@@ -51,23 +47,29 @@ class TableBot:
         try:
             credentials = ServiceAccountCredentials.from_json_keyfile_name('credentials.json', scope)
         except:
-            return "Credentials weren`t found."
+            return "Credentials.json не був знайдений чи є неправильний"
 
         # authorize the clientsheet 
         try:
             self.sba = gspread.authorize(credentials)
         except:
-            return "Error in connecting by credentials"
+            return "Неправильний файл credentials.json"
         
         try:
             self.sheet = self.sba.open(name)
         except: 
-            return "Table was`t found or don`t have perrmision"
+            return "Таблиця не була знайдена чи ви не маєте доступу"
         
         try:
             self.worksheet = self.sheet.worksheet(page)
         except:
-            return "Page wasn`t found."
-        return ""
+            return "Аркуш в таблиці не був знайдений"
+        return None
+
     def setStartRow(self, row):
         self.start_row = row
+
+    def get_info_from_user(self, tableName, tablePage,startRow):
+        self.table_name = tableName
+        self.page = tablePage
+        self.start_row = startRow
