@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=AR+One+Sans:wght@400;500;600;700&family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+body 
+{
+    margin: 0px;
+    font-family: 'AR One Sans', sans-serif;
+    font-family: 'Open Sans', sans-serif;
+    background-color: #fff;
+    color: #000;
+}
+.container 
+{
+    margin: 0 auto;
+    width: 1280px;
+}
+.fields
+{
+    height: 100vh;
+}
+.json_credentials
+{
+    height: 100vh;
+}
+.how_it_work
+{
+    height: 100vh;
+}
+.title_main
+{
+    font-size: 48px;
+    margin-top: 20px;
+}
+.content
+{
+    display: flex;
+}
+.fields_steps_items_title
+{
+    padding-top: 10px;
+    font-size: 20px;
+}
+.fields_steps_items_photo img
+{
+    margin: 20px;
+    box-shadow: 0px 0px 15px 5px rgba(0, 0, 0, 0.5);
+}
+.fields_steps_items_title_Big
+{
+    font-size: 32px;
+}
