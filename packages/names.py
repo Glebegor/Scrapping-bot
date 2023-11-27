@@ -21,7 +21,7 @@ class ScrapNames:
 
     def getFromOpenData(self, id):
         # Creating request
-        r = requests.get(f'https://opendatabot.ua/c/{id}?from=search')
+        r = requests.get(f'https://opendatabot.ua/c/{id}?from=search', verify=False)
         if str(r.status_code) == "404":
             return None
         soup = BeautifulSoup(r.content, 'html.parser')
@@ -34,7 +34,7 @@ class ScrapNames:
 
     def getFromNomis(self, id):
         # Creating request
-        r = requests.get(f'https://nomis.com.ua/ru/{id}')
+        r = requests.get(f'https://nomis.com.ua/ru/{id}', verify=False)
         if str(r.status_code) == "404":
             return None
         soup = BeautifulSoup(r.content, 'html.parser')
@@ -61,7 +61,7 @@ class ScrapNames:
 
     def getFromUaRegion(self, id):
         # Creating request
-        r = requests.get(f'https://www.ua-region.com.ua/{id}')
+        r = requests.get(f'https://www.ua-region.com.ua/{id}', verify=False)
         soup = BeautifulSoup(r.content, 'html.parser')
         
         # Finding of element    

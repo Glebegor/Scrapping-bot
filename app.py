@@ -50,12 +50,20 @@ class Client:
         self.button = ttk.Button(container, text="Почати парсинг", command=lambda: self.start_call_back(i1.get(), i2.get(), i3.get()))
         self.button_stop = ttk.Button(container, text="Закінчити", command=self.stop_call_back)
         self.button_help = ttk.Button(self.main_frame, text="Як це працює?", command=self.openHelpFile)
+        self.button_paste1 = ttk.Button(container, text="Вставити", command=lambda: i1.event_generate("<<Paste>>"))
+        self.button_paste2 = ttk.Button(container, text="Вставити", command=lambda: i2.event_generate("<<Paste>>"))
+        self.button_paste3 = ttk.Button(container, text="Вставити", command=lambda: i3.event_generate("<<Paste>>"))
         self.button.grid(pady=(20,0),padx=(0,70),column=0, row=11)
         self.button_stop.grid(pady=(20,0),padx=(100,0),column=0, row=11)
         self.button_help.grid(pady=(20,0),padx=(10,0),column=0, row=3)
+        self.button_paste1.grid(padx=(190,0), column=0, row=6 )
+        self.button_paste2.grid(padx=(190,0), column=0, row=8 )
+        self.button_paste3.grid(padx=(190,0), column=0, row=10 )
         container.grid(pady=20)
         self.button_stop.config(state=tk.DISABLED)
 
+    def pasteInfo(self, button):
+        pass
 
     def Run(self):
         self.client.mainloop()
@@ -89,7 +97,7 @@ class Client:
 
             
         # Main cyclus
-        for i in range(start_of_repeat, count_of_repeat):
+        for i in range(start_of_repeat, count_of_repeat+1):
             if self.event.is_set():
                 print("Function ended working")
                 self.button.config(state=tk.NORMAL)

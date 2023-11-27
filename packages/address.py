@@ -19,7 +19,7 @@ class ScrapAddress:
 
     def getFromOpenData(self, id):
         # Creating request
-        r = requests.get(f'https://opendatabot.ua/c/{id}?from=search')
+        r = requests.get(f'https://opendatabot.ua/c/{id}?from=search', verify=False)
 
         if str(r.status_code) == "404":
             return None
@@ -34,7 +34,7 @@ class ScrapAddress:
 
     def getFromUaRegion(self, id):
         # Creating request
-        r = requests.get(f'https://www.ua-region.com.ua/{id}')
+        r = requests.get(f'https://www.ua-region.com.ua/{id}', verify=False)
         if str(r.status_code) == "404":
             return None
 

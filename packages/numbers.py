@@ -24,6 +24,12 @@ class ScrapNumbers:
         filtered_array = list(set(filtered_array))
         if len(filtered_array) == 0:
             return ["Телефон не був знайдений"]
+        if len(filtered_array) > 4:
+            return filtered_array[:1]
+        if len(filtered_array) > 5:
+            return filtered_array[:2]
+        if len(filtered_array) > 6:
+            return filtered_array[:3]
         return filtered_array
 
     def notNone(self,array):
@@ -35,7 +41,7 @@ class ScrapNumbers:
 
     def getFromOpenData(self, id):
         # Creating request
-        r = requests.get(f'https://opendatabot.ua/c/{id}?from=search')
+        r = requests.get(f'https://opendatabot.ua/c/{id}?from=search', verify=False)
         if str(r.status_code) == "404":
             return None
 
@@ -53,7 +59,7 @@ class ScrapNumbers:
 
     def getFromNomis(self, id):
         # Creating request
-        r = requests.get(f'https://nomis.com.ua/ru/{id}')
+        r = requests.get(f'https://nomis.com.ua/ru/{id}', verify=False)
         if str(r.status_code) == "404":
             return None
         soup = BeautifulSoup(r.content, 'html.parser')
@@ -64,7 +70,10 @@ class ScrapNumbers:
             return None
 
         # Finding of element    
-        c = soup.find_all('div', {"class": "answ text col-xs-9 col-xxs-12 grey"})[1]
+        try: 
+            c = soup.find_all('div', {"class": "answ text col-xs-9 col-xxs-12 grey"})[1]
+        except:
+            return None
         numbers = c.text.replace("\n",'').split(";")
         filtered_numbers = []
         for i in range(len(numbers)-1):
@@ -93,7 +102,7 @@ class ScrapNumbers:
 
     def getFromUaRegion(self, id):
         # Creating request
-        r = requests.get(f'https://www.ua-region.com.ua/{id}')
+        r = requests.get(f'https://www.ua-region.com.ua/{id}', verify=False)
         if str(r.status_code) == "404":
             return None
 
