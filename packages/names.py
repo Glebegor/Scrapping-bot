@@ -11,6 +11,7 @@ class ScrapNames:
         array_of_names.append(self.getFromOpenData(id))
         array_of_names.append(self.getFromNomis(id))
         array_of_names.append(self.getFromUaRegion(id))
+        array_of_names.append(self.getClarity(id))
         return self.getFirstName(array_of_names)
 
     def getFirstName(self, array):
@@ -69,3 +70,13 @@ class ScrapNames:
         for i in range(len(c)):
             if "Керівник" in c[i].text:
                 return c[i].text.replace("Керівник", '')
+
+    def getClarity(self, id):
+        r = requests.get(f"https://clarity-project.info/edr/{id}", verify=False)
+        if str(r.status_code) == "404":
+            return None
+        soup = BeautifulSoup(r.content, 'html.parser')
+        c = soup.find_all("tr")
+        for i in range(len(c)):
+            if "Уповноважені особи:" in c[i].text:
+                return c[i].find_all('a')[0].text.strip()

@@ -119,6 +119,16 @@ class ScrapNumbers:
             return None
 
         return array_of_numbers
+    
+    def getClarity(self, id):
+        r = requests.get(f"https://clarity-project.info/edr/{id}", verify=False)
+        if str(r.status_code) == "404":
+            return None
+        soup = BeautifulSoup(r.content, 'html.parser')
+        c = soup.find_all("tr")
+        for i in range(len(c)):
+            if "Уповноважені особи:" in c[i].text:
+                return c[i].find_all('a')[0].text.strip()
 
     def has_tel_href(self, tag):
         return tag.name == 'a' and tag.get('href', '').startswith('tel:')
