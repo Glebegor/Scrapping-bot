@@ -19,16 +19,18 @@ class ScrapNumbers:
         opendata = self.getFromOpenData(id)
         if opendata != None:
             array_of_numbers.extend(opendata)
+        clarity = self.getClarity(id)
+        if clarity != None:
+            array_of_numbers.extend(clarity)
+
 
         filtered_array = self.notNone(array_of_numbers)
         filtered_array = list(set(filtered_array))
+        print(filtered_array)
         if len(filtered_array) == 0:
             return ["Телефон не був знайдений"]
         if len(filtered_array) > 4:
-            return filtered_array[:1]
-        if len(filtered_array) > 5:
-            return filtered_array[:2]
-        if len(filtered_array) > 6:
+            print(filtered_array[:3])
             return filtered_array[:3]
         return filtered_array
 
@@ -121,14 +123,30 @@ class ScrapNumbers:
         return array_of_numbers
     
     def getClarity(self, id):
-        r = requests.get(f"https://clarity-project.info/edr/{id}", verify=False)
+        r = requests.get(f"https://clarity-project.info/edr/{id}/history/prozorro", verify=False)
         if str(r.status_code) == "404":
             return None
+
         soup = BeautifulSoup(r.content, 'html.parser')
-        c = soup.find_all("tr")
+        try:
+            c = soup.find_all('tbody')[-1].find_all('td')
+        except:
+            return None
+        if len(c) == 0:
+            return None
+
+        filtered_numbers = []
         for i in range(len(c)):
-            if "Уповноважені особи:" in c[i].text:
-                return c[i].find_all('a')[0].text.strip()
+            if len(c[i].text) >= 3:
+                print(c[i].text[3:])
+                if c[i].text[3:] == "+38":
+                    filtered_array.append(c[i].text)
+        #     for j in range(len(numbers_td)):
+        #         print(numbers_td[j])
+        #     print('\n')
+        #         # filtered_numbers.append(numbers_td[1])
+        
+        return filtered_numbers
 
     def has_tel_href(self, tag):
         return tag.name == 'a' and tag.get('href', '').startswith('tel:')
