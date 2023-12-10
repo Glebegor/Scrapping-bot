@@ -138,14 +138,15 @@ class ScrapNumbers:
         filtered_numbers = []
         for i in range(len(c)):
             if len(c[i].text) >= 3:
-                print(c[i].text[3:])
-                if c[i].text[3:] == "+38":
-                    filtered_array.append(c[i].text)
-        #     for j in range(len(numbers_td)):
-        #         print(numbers_td[j])
-        #     print('\n')
-        #         # filtered_numbers.append(numbers_td[1])
-        
+                if c[i].text[:3] == "+38":
+                    splited_numbers = c[i].text.split(',')
+                    if len(splited_numbers) > 1:
+                        for j in range(len(splited_numbers)):
+                            filtered_numbers.append(splited_numbers[j].replace(' ', '').replace('-', '').replace('(', '').replace(')', ''))
+                    else:
+                        filtered_numbers.append(c[i].text[:].replace(' ', '').replace('-', '').replace('(', '').replace(')', ''))
+
+        print(f'filtered_numbers: {filtered_numbers}')
         return filtered_numbers
 
     def has_tel_href(self, tag):

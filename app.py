@@ -66,13 +66,19 @@ class Client:
         pass
 
     def Run(self):
+        self.client.protocol("WM_DELETE_WINDOW", self.on_closing)
         self.client.mainloop()
 
     def createInputAndLable(self, frame, text):
         label = ttk.Label(frame, background="#fff", text=text, font=self.fonts[1], wraplength=200, anchor="w", justify="left")
         inputPole = ttk.Entry(frame, background="#fff", font=self.fonts[2])
         return (label, inputPole)
-    
+    def on_closing(self):
+        if messagebox.askokcancel("Quit", "Ви точно хочете вийти?"):
+            self.event.set()
+            self.button_stop.config(state=tk.DISABLED)
+            self.client.destroy()
+            
     def call_back(self, tableName, tablePage, startRow):
         self.app.tbBot.get_info_from_user(tableName, tablePage, startRow)
 
