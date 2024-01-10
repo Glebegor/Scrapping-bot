@@ -58,7 +58,7 @@ class TableBot:
         try:
             self.sheet = self.sba.open(name)
         except: 
-             return "Таблиця не була знайдена чи ви не маєте доступу, також перевірте інтернет з'єднання."
+            return "Таблиця не була знайдена чи ви не маєте доступу, також перевірте інтернет з'єднання."
         
         try:
             self.worksheet = self.sheet.worksheet(page)

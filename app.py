@@ -81,7 +81,7 @@ class Client:
             
     def call_back(self, tableName, tablePage, startRow):
         self.app.tbBot.get_info_from_user(tableName, tablePage, startRow)
-
+            
         err = self.app.tbBot.setTable(tableName, tablePage)
         if err != None:
             print(err)
@@ -104,30 +104,41 @@ class Client:
             
         # Main cyclus
         for i in range(start_of_repeat, count_of_repeat+1):
-            if self.event.is_set():
-                print("Function ended working")
+            try:
+                if self.event.is_set():
+                    print("Function ended working")
+                    self.button.config(state=tk.NORMAL)
+                    # self.client.destroy()
+                    break
+                print("App working")
+
+                id_of_company = self.app.tbBot.getId(i)
+                if self.event.is_set():
+                    print("Function ended working")
+                    self.button.config(state=tk.NORMAL)
+                    # self.client.destroy()
+                    break
+                listInfo = self.app.scBot.getInfo(str(id_of_company.value))
+                if self.event.is_set():
+                    print("Function ended working")
+                    self.button.config(state=tk.NORMAL)
+                    # self.client.destroy()
+                    break
+            except:
+                messagebox.showerror('Проблема на стороні сервера', 'Немає з`єднання з сервером чи немає підключення до інтернету!')
+                messagebox.showinfo("Кінець програми", "Опрацювання даних перервано")
+                self.event.clear()
                 self.button.config(state=tk.NORMAL)
-                # self.client.destroy()
-                break
-            print("App working")
-            
-            id_of_company = self.app.tbBot.getId(i)
-            if self.event.is_set():
-                print("Function ended working")
-                self.button.config(state=tk.NORMAL)
-                # self.client.destroy()
-                break
-            listInfo = self.app.scBot.getInfo(str(id_of_company.value))
-            if self.event.is_set():
-                print("Function ended working")
-                self.button.config(state=tk.NORMAL)
-                # self.client.destroy()
-                break
-            self.app.tbBot.addToTable(listInfo=listInfo, rowId=i)
-            if self.event.is_set():
-                print("Function ended working")
-                self.button.config(state=tk.NORMAL)
-                # self.client.destroy()
+                self.button_stop.config(state=tk.DISABLED)
+                return
+            try:
+                self.app.tbBot.addToTable(listInfo=listInfo, rowId=i)
+                if self.event.is_set():
+                    print("Function ended working")
+                    self.button.config(state=tk.NORMAL)
+                    # self.client.destroy()
+            except:
+                messagebox.showerror('Проблема на підключенні до Таблиці', 'Немає з`єднання з таблицею чи немає підключення до інтернету!')
             time.sleep(5)
             if self.event.is_set():
                 print("Function ended working")
@@ -150,7 +161,6 @@ class Client:
         if startRow != '':
             try:
                 if type(int(startRow)) == int:
-
                     pass   
             except:
                 messagebox.showerror('Число рядка', 'Будь ласка, введіть число, чи можете нічого не писати і буде автоматично обран останній заповнений рядочок') 
