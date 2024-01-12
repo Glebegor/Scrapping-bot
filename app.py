@@ -7,6 +7,7 @@ import threading
 import time
 import webbrowser
 import os
+import requests
 
 class Client:
     def __init__(self, fonts,sizeW,sizeH, app):
@@ -103,7 +104,8 @@ class Client:
 
             
         # Main cyclus
-        for i in range(start_of_repeat, count_of_repeat+1):
+        i = start_of_repeat if start_of_repeat != '' else 0
+        while i < count_of_repeat+1:
             try:
                 if self.event.is_set():
                     print("Function ended working")
@@ -124,22 +126,28 @@ class Client:
                     self.button.config(state=tk.NORMAL)
                     # self.client.destroy()
                     break
+            except requests.exceptions.ConnectTimeout:
+                messagebox.showerror('Проблема на стороні сервера', 'Триває повторне підключення до серверу!')
             except:
-                messagebox.showerror('Проблема на стороні сервера', 'Немає з`єднання з сервером чи немає підключення до інтернету!')
+                messagebox.showerror('Проблема на стороні сервера', 'Немає підключення до інтернету!')
                 messagebox.showinfo("Кінець програми", "Опрацювання даних перервано")
                 self.event.clear()
                 self.button.config(state=tk.NORMAL)
                 self.button_stop.config(state=tk.DISABLED)
                 return
+
             try:
                 self.app.tbBot.addToTable(listInfo=listInfo, rowId=i)
                 if self.event.is_set():
                     print("Function ended working")
                     self.button.config(state=tk.NORMAL)
                     # self.client.destroy()
+            except requests.exceptions.ConnectTimeout:
+                messagebox.showerror('Проблема на стороні сервера', 'Триває повторне підключення до таблиці!')
             except:
-                messagebox.showerror('Проблема на підключенні до Таблиці', 'Немає з`єднання з таблицею чи немає підключення до інтернету!')
+                messagebox.showerror('Проблема на підключенні до Таблиці', 'Немає підключення до інтернету!')
             time.sleep(5)
+
             if self.event.is_set():
                 print("Function ended working")
                 self.button.config(state=tk.NORMAL)
