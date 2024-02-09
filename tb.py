@@ -20,13 +20,17 @@ class TableBot:
 
     # Main func to add info to table 
     def addToTable(self, listInfo, rowId):
-        for value in listInfo:
-            if value == "Numbers":
-                for i in range(len(listInfo["Numbers"])):
-                    self.add(rowId, self.working_columns[f'Number{i+1}'], listInfo[value][i])
+        for key, value in listInfo.items():
+            if key == "Numbers":
+                array_of_numbers = listInfo["Numbers"]
+                for i in range(len(array_of_numbers)):
+                    column_name = f'Number{i+1}'
+                    # self.add(rowId, self.working_columns[column_name], array_of_numbers[i])
             else:
-                self.add(rowId, self.working_columns[value], listInfo[value])
+                self.add(rowId, self.working_columns[key], value)
+
         return "End"
+
 
     # Max size 
     def getMaxSizeTable(self, column):
@@ -38,16 +42,20 @@ class TableBot:
     
     # Add elements to table
     def add(self, rowId, col, value):
-        self.worksheet.update(f"{col}{rowId}", value)
+        try:
+            self.worksheet.update([[col+str(rowId), str(value)]])
+            print(f"Updated {col+str(rowId)} with value: {value}")
+        except Exception as e:
+            print(f"Error updating cell: {e}")
 
     # Set table
     def setTable(self, name, page): 
-        # GetScope
+        # GetScopes
         scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
         try:
             credentials = ServiceAccountCredentials.from_json_keyfile_name('credentials.json', scope)
         except:
-            return "Credentials.json не був знайдений чи є неправильний"
+            return "credentials.json не був знайдений чи є неправильний"
 
         # authorize the clientsheet 
         try:

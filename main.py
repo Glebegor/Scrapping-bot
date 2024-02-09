@@ -8,6 +8,8 @@ from app import Client
 
 import time
 
+
+# Mac compile wine pyinstaller --onefile main.py
 class App:
     def __init__(self, scBot, tbBot):
         self.scBot = scBot

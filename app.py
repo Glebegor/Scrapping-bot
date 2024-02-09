@@ -110,7 +110,6 @@ class Client:
                 if self.event.is_set():
                     print("Function ended working")
                     self.button.config(state=tk.NORMAL)
-                    # self.client.destroy()
                     break
                 print("App working")
 
@@ -118,13 +117,11 @@ class Client:
                 if self.event.is_set():
                     print("Function ended working")
                     self.button.config(state=tk.NORMAL)
-                    # self.client.destroy()
                     break
                 listInfo = self.app.scBot.getInfo(str(id_of_company.value))
                 if self.event.is_set():
                     print("Function ended working")
                     self.button.config(state=tk.NORMAL)
-                    # self.client.destroy()
                     break
             except requests.exceptions.ConnectTimeout:
                 messagebox.showerror('Проблема на стороні сервера', 'Триває повторне підключення до серверу!')
@@ -138,14 +135,15 @@ class Client:
 
             try:
                 self.app.tbBot.addToTable(listInfo=listInfo, rowId=i)
+                print("Adding working")
+
                 if self.event.is_set():
                     print("Function ended working")
                     self.button.config(state=tk.NORMAL)
-                    # self.client.destroy()
             except requests.exceptions.ConnectTimeout:
-                messagebox.showerror('Проблема на стороні сервера', 'Триває повторне підключення до таблиці!')
-            except:
-                messagebox.showerror('Проблема на підключенні до Таблиці', 'Немає підключення до інтернету!')
+                messagebox.showerror('Проблема на стороні сервера', 'Триває повторне підключення до таблиці!')            
+            # except:
+            #     messagebox.showerror('Проблема на підключенні до Таблиці', 'Немає підключення до інтернету!')
             time.sleep(5)
 
             if self.event.is_set():
@@ -153,6 +151,7 @@ class Client:
                 self.button.config(state=tk.NORMAL)
                 # self.client.destroy()
                 break
+
         messagebox.showinfo("Кінець програми", "Опрацювання даних закінчено")
         self.event.clear()
         self.button.config(state=tk.NORMAL)
