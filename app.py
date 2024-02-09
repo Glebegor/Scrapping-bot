@@ -126,12 +126,8 @@ class Client:
             except requests.exceptions.ConnectTimeout:
                 messagebox.showerror('Проблема на стороні сервера', 'Триває повторне підключення до серверу!')
             except:
-                messagebox.showerror('Проблема на стороні сервера', 'Немає підключення до інтернету!')
-                messagebox.showinfo("Кінець програми", "Опрацювання даних перервано")
-                self.event.clear()
-                self.button.config(state=tk.NORMAL)
-                self.button_stop.config(state=tk.DISABLED)
-                return
+                print("Reconnecting...")
+                continue
 
             try:
                 self.app.tbBot.addToTable(listInfo=listInfo, rowId=i)
@@ -142,8 +138,9 @@ class Client:
                     self.button.config(state=tk.NORMAL)
             except requests.exceptions.ConnectTimeout:
                 messagebox.showerror('Проблема на стороні сервера', 'Триває повторне підключення до таблиці!')            
-            # except:
-            #     messagebox.showerror('Проблема на підключенні до Таблиці', 'Немає підключення до інтернету!')
+            except:
+                print("Reconnecting...")
+                continue
             time.sleep(5)
 
             if self.event.is_set():
@@ -151,6 +148,7 @@ class Client:
                 self.button.config(state=tk.NORMAL)
                 # self.client.destroy()
                 break
+            i += 1
 
         messagebox.showinfo("Кінець програми", "Опрацювання даних закінчено")
         self.event.clear()
