@@ -25,7 +25,7 @@ class TableBot:
                 array_of_numbers = listInfo["Numbers"]
                 for i in range(len(array_of_numbers)):
                     column_name = f'Number{i+1}'
-                    # self.add(rowId, self.working_columns[column_name], array_of_numbers[i])
+                    self.add(rowId, self.working_columns[column_name], array_of_numbers[i])
             else:
                 self.add(rowId, self.working_columns[key], value)
 
@@ -43,7 +43,7 @@ class TableBot:
     # Add elements to table
     def add(self, rowId, col, value):
         try:
-            self.worksheet.update([[col+str(rowId), str(value)]])
+            self.worksheet.update([[str(value)]], col+str(rowId))
             print(f"Updated {col+str(rowId)} with value: {value}")
         except Exception as e:
             print(f"Error updating cell: {e}")
