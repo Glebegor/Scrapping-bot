@@ -18,7 +18,7 @@ class ScrapNames:
         for i in range(len(array)-1):
             if array[i] != None:
                 return array[i]
-        return "Ім`я керівника не знайдено"
+        return ""
 
     def getFromOpenData(self, id):
         # Creating request

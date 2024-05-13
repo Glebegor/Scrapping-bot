@@ -28,7 +28,7 @@ class ScrapNumbers:
         filtered_array = list(set(filtered_array))
         print(filtered_array)
         if len(filtered_array) == 0:
-            return ["Телефон не був знайдений"]
+            return [""]
         if len(filtered_array) > 4:
             print(filtered_array[:3])
             return filtered_array[:3]

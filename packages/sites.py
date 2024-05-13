@@ -11,13 +11,13 @@ class ScrapSites:
         # Creating request
         r = requests.get(f'https://nomis.com.ua/ru/{id}', verify=False)
         if str(r.status_code) == "404":
-            return 'Сайт не був знайдений'
+            return ''
         soup = BeautifulSoup(r.content, 'html.parser')
         
         # Check if company found
         c = soup.find_all("div", {"class": "title"})
         if len(c) != 0 and c[0].text == "404":
-            return 'Сайт не був знайдений'
+            return ''
 
         # Finding of element    
         c = soup.find_all('div', {"class": "row line-description paper_block"})
@@ -25,6 +25,6 @@ class ScrapSites:
             if "Веб-сайт:" in c[i].text:
                 siteName = c[i].text.replace("Веб-сайт:", "").replace(" ", "").replace('\n','').replace(";", "; ")
                 if siteName == "Информацияуточняется" or siteName == None or siteName == " " or siteName == '':
-                    return "Інформація уточнюється" 
+                    return ""
                 return siteName
-        return 'Сайт не був знайдений'
+        return ''
